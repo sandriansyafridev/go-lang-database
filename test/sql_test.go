@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"go-lang-database/db"
+	"log"
 	"testing"
 	"time"
 )
@@ -21,16 +22,19 @@ func TestExecContextInsertDatabase(t *testing.T) {
 	}
 
 	user := map[string]interface{}{
-		"name":       "Hafid",
-		"email":      "hafid@gmail.com",
-		"age":        24,
+		"name":       "Yogi",
+		"email":      "yogi@gmail.com",
+		"age":        27,
 		"is_student": false,
 		"created_at": time.Now(),
 	}
 
-	_, err = stmt.ExecContext(ctx, user["name"], user["email"], user["age"], user["is_student"], user["created_at"])
+	result, err := stmt.ExecContext(ctx, user["name"], user["email"], user["age"], user["is_student"], user["created_at"])
 	if err != nil {
 		t.Error("Failed to insert data: ", err.Error())
 	}
+
+	UserID, _ := result.LastInsertId()
+	log.Println("Last Insert UserID :", UserID)
 
 }
