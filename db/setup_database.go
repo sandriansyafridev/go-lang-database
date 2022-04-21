@@ -10,7 +10,7 @@ import (
 
 var (
 	config = InitConfiguration("root", "", "localhost", "3306", "go-lang-database")
-	dns    = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", config.USERNAME, config.PASSWORD, config.HOST, config.PORT, config.DB_NAME)
+	dns    = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", config.USERNAME, config.PASSWORD, config.HOST, config.PORT, config.DB_NAME)
 )
 
 func SetupDatabase() (*sql.DB, error) {
