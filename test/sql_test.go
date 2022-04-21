@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"go-lang-database/db"
+	"log"
 	"testing"
 	"time"
 )
@@ -12,18 +13,24 @@ import (
 func TestExecContextInsertDatabase(t *testing.T) {
 
 	db, _ := db.SetupDatabase()
+	tx, err := db.Begin()
+	if err != nil {
+		t.Fatal("Error to Begin Transaction")
+	}
 
 	ctx := context.Background()
 	query := "INSERT INTO users VALUES(0,?,?,?,?,?)"
-	stmt, err := db.Prepare(query)
+	stmt, err := tx.PrepareContext(ctx, query)
 	if err != nil {
 		t.Error("Failed to prepare data: ", err.Error())
 	}
 
+	defer stmt.Close()
+
 	user := map[string]interface{}{
-		"name":       "Hafid",
-		"email":      "hafid@gmail.com",
-		"age":        24,
+		"name":       "random",
+		"email":      "random@gmail.com",
+		"age":        25,
 		"is_student": false,
 		"created_at": time.Now(),
 	}
@@ -32,5 +39,8 @@ func TestExecContextInsertDatabase(t *testing.T) {
 	if err != nil {
 		t.Error("Failed to insert data: ", err.Error())
 	}
+
+	log.Println("CREATED")
+	tx.Rollback()
 
 }
